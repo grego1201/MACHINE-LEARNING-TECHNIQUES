@@ -9,7 +9,7 @@ Modified on Wed Sep 27 17:00:48 2017 by:
 
 import csv
 
-f = open("data/dengue_features_train (copia).csv", 'rt')
+f = open("../data/dengue_features_train (copia).csv", 'rt')
 city = 'sj'
 range_years = range(2004,2011)
 
@@ -65,16 +65,16 @@ for i in range(len(all_weeks)):
 
 total = total_in + total_out
 
-
-print("Registros almacenados: {}".format(total_in))
-print("Registros excluidos: {}".format(total_out))
-print("Registros totales: {}".format(total))
+print("Data for: Elimination technique by \"empty features\":")
+print("Loads examples: {}".format(total_in))
+print("Excluded examples: {}".format(total_out))
+print("Total examples: {}".format(total))
 
 
 # write the results in a csv files
-f1 = open("data/dengue_pivot_select.csv",'wt')
-f2 = open("data/dengue_pivot_mean.csv",'wt')
-f3 = open("data/dengue_to_smooth.csv",'wt')
+f1 = open("../data/dengue_pivot_select.csv",'wt')
+f2 = open("../data/dengue_pivot_mean.csv",'wt')
+f3 = open("../data/dengue_to_smooth.csv",'wt')
 
 try:
     writer1 = csv.writer(f1, lineterminator='\n')
