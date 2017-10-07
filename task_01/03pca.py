@@ -27,7 +27,6 @@ for line in f1:
     if read_header: 
             # remove double quotes
         row = line.replace ('"', '').split(",")
-        row.pop(0)
         
         if row != []:
             data = [float(el) for el in row]
@@ -44,7 +43,6 @@ for line in f2:
     if read_header: 
         # remove double quotes
         row = line.replace ('"', '').split(",")
-        row.pop(0)
         
         if row != []:
             data = [float(el) for el in row]
@@ -83,7 +81,7 @@ plt.title('PCA suppresing empty data.\nEstimation ratio: {}'
           .format(estimator_from_selected.explained_variance_ratio_))
 plt.xlim(-1.2, 2)
 plt.ylim(-1.2, 2)
-ax[0].grid(True)
+plt.grid(True)
 fig.tight_layout()
 
 plt.subplot(2,1,2)
@@ -94,7 +92,7 @@ plt.title('PCA with arithmetic means.\nEstimation ratio: {}'
           .format(estimator_from_means.explained_variance_ratio_))
 plt.xlim(-1.2, 2)
 plt.ylim(-1.2, 2)
-ax[1].grid(True)
+plt.grid(True)
 fig.tight_layout()
 
 plt.show()

@@ -9,13 +9,15 @@ Modified on Wed Sep 27 17:00:48 2017 by:
 
 import csv
 
-f = open("../data/dengue_features_train (copia).csv", 'rt')
+f = open("../data/dengue_features_train.csv", 'rt')
 city = 'sj'
 range_years = range(2004,2011)
 
 all_weeks = []
 select_weeks =[]
 arithmetic_means = []
+smoother_data_row = []
+
 heads = []
 
 total = 0
@@ -28,22 +30,23 @@ try:
     reader = csv.reader(f)
     
     for row in reader:
-        newest = row[0]
-        if newest == 'city':
+        newcity = row[0]
+        if newcity == 'city':
             # No include 'city' column (feature)
-            heads.append(row[1:3]+row[4:])
-        elif newest == city:
+            heads.append(row[4:])
+        
+        elif newcity == city:
             if ( int(row[1]) in range_years ):      
-                all_weeks.append(row[1:3]+row[4:])
+                all_weeks.append(row[4:])
                 
                 if not ('' in row):
                     # No include 'city' column (feature) and 
                     # rows whit any empty feature
-                    select_weeks.append(row[1:3]+row[4:])
+                    select_weeks.append(row[4:])
                     total_in += 1
                 else:
                     total_out += 1
-                    smoother_data_row.append(row[1:3]+row[4:])
+                    smoother_data_row.append(row[4:])
                     #examples.append(total_in+total_out+1)
                     
 finally:

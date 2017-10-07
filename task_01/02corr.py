@@ -25,7 +25,7 @@ for line in f1:
 	if read_header: 
 		# remove double quotes
 		row = line.replace ('"', '').split(",")
-		row.pop(0)
+        
 		if row != []:
 			cities.append(map(float, row))
 	read_header = True
@@ -37,7 +37,7 @@ for line in f2:
 	if read_header: 
 		# remove double quotes
 		row = line.replace ('"', '').split(",")
-		row.pop(0)
+        
 		if row != []:
 			cities_mean.append(map(float, row))
 	read_header = True
@@ -45,13 +45,15 @@ for line in f2:
 # plotting the correlation matrix
 #http://glowingpython.blogspot.com.es/2012/10/visualizing-correlation-matrices.html
 
+# The total number of characteristics is the same in both
+features_length =len(cities[0])
 
 R1 = corrcoef(transpose(cities))
 plt.pcolormesh(R1)
 #pcolor(R1)
 colorbar()
-yticks_r1 = yticks(arange(0,len(cities[0])),range(0,len(cities[0])))
-xticks_r1 = xticks(arange(0,len(cities[0])),range(0,len(cities[0])))
+yticks_r1 = yticks(arange(0,features_length),range(0,features_length))
+xticks_r1 = xticks(arange(0,features_length),range(0,features_length))
 plt.title('Correlation suppresing empty data')
 show()
 
@@ -59,8 +61,8 @@ R2 = corrcoef(transpose(cities_mean))
 #pcolor(R2)
 plt.pcolormesh(R2)
 colorbar()
-yticks_r2 = yticks(arange(0,len(cities_mean[0])),range(0,len(cities_mean[0])))
-xticks_r2 = xticks(arange(0,len(cities_mean[0])),range(0,len(cities_mean[0])))
+yticks_r2 = yticks(arange(0,features_length),range(0,features_length))
+xticks_r2 = xticks(arange(0,features_length),range(0,features_length))
 plt.title('Correlation with arithmetic means')
 show()
 
