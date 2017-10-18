@@ -7,6 +7,8 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn import metrics
+import numpy as np
+
 
 
 ## Function for load data except Outliers
@@ -55,7 +57,7 @@ plt.plot(X_pca[:,0], X_pca[:,1],'x')
 
 # parameters
 methods = ["random", "k-means++"]
-init = methods[1] # initialization method 
+init = methods[0] # initialization method 
 iterations = 10 # to run 10 times with different random centroids to choose the final model as the one with the lowest SSE
 max_iter = 300 # maximum number of iterations for each single run
 tol = 1e-04 # controls the tolerance with regard to the changes in the within-cluster sum-squared-error to declare convergence
@@ -67,11 +69,13 @@ silhouettes = []
 
 for i in range(2, 11):
     km = KMeans(i, init, n_init = iterations ,max_iter= max_iter, tol = tol,random_state = random_state)
-    labels = km.fit_predict(data)
+    labels = km.fit_predict(data_normalizated)
     distortions.append(km.inertia_)
-    silhouettes.append(metrics.silhouette_score(data, labels))
+    silhouettes.append(metrics.silhouette_score(data_normalizated, labels))
 
-# Plot distoritions    
+# 4. Plot results to know which K set
+
+# Plot distoritions
 plt.plot(range(2,11), distortions, marker='o')
 plt.xlabel('Number of clusters')
 plt.ylabel('Distortion')
@@ -82,3 +86,19 @@ plt.plot(range(2,11), silhouettes , marker='o')
 plt.xlabel('Number of clusters')
 plt.ylabel('Silohouette')
 plt.show()
+
+      
+# Set K value
+k = 2
+
+
+### 5. Execute clustering 
+km = KMeans(k, init, n_init = iterations ,max_iter= max_iter, tol = tol,random_state = random_state)
+labels = km.fit_predict(data_normalizated)
+
+
+### 6. Plot the results
+plt.scatter(X_pca[:,0], X_pca[:,1], c=labels)
+plt.grid()
+plt.show()
+
