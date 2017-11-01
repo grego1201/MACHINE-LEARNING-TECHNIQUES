@@ -113,9 +113,9 @@ def temperature_control(data):
     return complete_data
 
 
-def correlation_plots(data):
+def correlation_plots(data, R):
     features_length = len(data.columns)
-    R = data.astype(float).corr()
+    
     
     plt.pcolormesh(R)
     pcolor(R)
@@ -143,8 +143,6 @@ def correlation_plots(data):
                 linewidths=.2, cbar_kws={"shrink": .2}, ax=ax)
     
     ax.set_title('Pearson correlation')
-    
-    return R
 
 
 def normalization_with_minmax(data):
@@ -189,8 +187,8 @@ def main():
             'sj',
             years,
             excludes)
-    
-    correlation_plots(data)
+    R = data.astype(float).corr()
+    correlation_plots(data, R)
 
     data_normalizated = normalization_with_minmax(data)
     estimator, X_pca = pca(data_normalizated)
