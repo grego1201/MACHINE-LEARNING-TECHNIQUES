@@ -19,7 +19,7 @@ We have identified 5 different groups as result of operation we realize in the t
   * Group 2: Inconclusive. (Maybe bad measures)
   * Group 3: Low precipitation.
   * Group 4: We should look for motive because elements belong with the last weeks of April and May.
-  * Group 5: Outliers
+  * Group 5: Outliers.
 
 ## [Optional] Execute the hierarchical clustering algorithm using feature as elements. Extract some conclusions.
 The same sequence of steps is carried out after transposition of the matrix. The following dendrogram and scatter plot are obtained.

@@ -26,9 +26,6 @@ def load_data(file, city, range_years, features_not_included):
     data = []
     heads = []
     
-    #total_in = 0
-    #total_out = 0
-    
     try:
         reader = csv.reader(f)
         
@@ -39,16 +36,9 @@ def load_data(file, city, range_years, features_not_included):
                 
             elif newcity == city:
                 if ( int(row[1]) in range_years ):
-                    
-                    #if not ('' in row):
-                        # No include 'city' column (feature) and 
-                        # rows whit any empty feature
                     example = exclude_features(row, features_not_included)
                     data.append(example)
-                    #total_in += 1
-                    #else:
-                        #example = 
-                        #total_out += 1
+
 
     finally:
         f.close()
@@ -56,9 +46,6 @@ def load_data(file, city, range_years, features_not_included):
         df = pd.DataFrame.from_records(data, columns = heads)
         df = df.replace('', np.nan, regex=True)
         
-        #print(total_in)
-        #print(total_out)
-        #print(total_in + total_out)
         
     return df
 
@@ -66,7 +53,7 @@ def load_data(file, city, range_years, features_not_included):
 def normalization_with_minmax(data):
     
     min_max_scaler = preprocessing.MinMaxScaler()
-    
+        
     return min_max_scaler.fit_transform(data.dropna().values)    
 
 def pca(data):
@@ -85,7 +72,6 @@ def main():
             'sj',
             years,
             excludes)
-
     
     # 1. Data normalization
     data_normalizated = normalization_with_minmax(data)
@@ -122,7 +108,11 @@ def main():
     #   4. plot
     colors = np.array([x for x in 'bgrcmykbgrcmykbgrcmykbgrcmyk'])
     colors = np.hstack([colors] * 20)
-    numbers = np.arange(len(X_pca))
+    
+    data_aux = data
+    
+    
+    numbers = data_aux.dropna().index
     fig, ax = plt.subplots()
         
     for i in range(len(X_pca)):
@@ -143,6 +133,7 @@ def main():
     
     data_aux = data
     data_droped = data_aux.dropna()
+    data_droped.to_csv('../data/data_droped.csv', sep='\t')
     
     features = data_droped.transpose();
 
@@ -178,6 +169,7 @@ def main():
     # http://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.cluster.hierarchy.dendrogram.html
     cluster.hierarchy.dendrogram(clusters, color_threshold = 3, labels = names, leaf_rotation=90)
     plt.show()
+
 
 if __name__ == '__main__':
 	main()
