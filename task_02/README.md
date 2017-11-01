@@ -15,10 +15,10 @@ Cluster hierarchic groups to realize a dispersion graphic representation was rea
 
 ## Explication of the results.
 We have identified 5 different groups as result of operation we realize in the task, data and graphics representation, which we name with these different meanings.
-  * Group 1: Half-high temperatures.
-  * Group 2: Inconclusive. (Maybe bad measures)
-  * Group 3: Low precipitation.
-  * Group 4: We should look for motive because elements belong with the last weeks of April and May.
+  * Group 1: Low temperatures.
+  * Group 2: Low precipitation.
+  * Group 3: High precipitation.
+  * Group 4: High temperatures.
   * Group 5: Outliers.
 
 ## [Optional] Execute the hierarchical clustering algorithm using feature as elements. Extract some conclusions.
