@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+<<<<<<< Updated upstream
 import csv
 
+=======
+>>>>>>> Stashed changes
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -14,6 +17,7 @@ from pylab import pcolor, show, colorbar, xticks, yticks
 import seaborn as sns
 
 
+<<<<<<< Updated upstream
 
 def exclude_features(data, excludes_list):
     index_range = range(0, len(excludes_list))
@@ -53,6 +57,32 @@ def load_data(file, city, range_years, features_not_included):
         
     return df
 
+=======
+def load_data(file, filter_parameters = None, excludes_features = None,
+              outliers = None):
+    
+    df = pd.read_csv(file)
+    
+    df.replace('', np.nan, inplace=True, regex=True)
+  
+    if filter_parameters != None:
+        for key, value in filter_parameters.iteritems():
+            df_aux = df.loc[df[key].isin(value)]
+            df=df_aux
+    
+    if excludes_features != None:
+        if type(excludes_features)==list and type(excludes_features[0])== str:
+            df.drop(labels = excludes_features, axis = 1, inplace = True)
+        elif type(excludes_features)==list and type(excludes_features[0])== int:
+            df.drop(df.columns[excludes_features], axis = 1, inplace = True)
+            
+    if outliers != None:
+        df.drop(df.index[outliers], inplace = True)
+    
+    return df
+
+
+>>>>>>> Stashed changes
 def correlation_plots(data, R):
     features_length = len(data.columns)
     
@@ -117,12 +147,20 @@ def pca_plots(estimator, X_pca, index):
 def main():
     # 0. Load data
     years = range(2004, 2011)
+<<<<<<< Updated upstream
     excludes = range(0, 4)
     data = load_data(
             "../data/dengue_features_train.csv",
             'sj',
             years,
             excludes)
+=======
+    _filter = {'city':['sj'], 'year': years}
+    excludes = range(0, 4)
+    
+    data = load_data("../data/dengue_features_train.csv",
+                     filter_parameters = _filter, excludes_features = excludes)
+>>>>>>> Stashed changes
     
     # 1. Data normalization
     data_normalizated = normalization_with_minmax(data)

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import csv
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -9,46 +7,64 @@ from sklearn.decomposition import PCA
 from sklearn import preprocessing 
 import sklearn.neighbors
 from scipy import cluster
+from numpy import arange
+from pylab import pcolor, show, colorbar, xticks, yticks
+import seaborn as sns
 
 
-def exclude_features(data, excludes_list):
-    index_range = range(0, len(excludes_list))
-    excludes_list.sort()    
-    data_aux = data
+def load_data(file, filter_parameters = None, excludes_features = None,
+              outliers = None):
     
-    for i in index_range:
-        data_aux.pop(excludes_list[i]-i)
-        
-    return data_aux
-
-def load_data(file, city, range_years, features_not_included):
-    f = open(file, 'rt')
-    data = []
-    heads = []
+    df = pd.read_csv(file)
     
-    try:
-        reader = csv.reader(f)
-        
-        for row in reader:
-            newcity = row[0]
-            if newcity == 'city':
-                heads.append(exclude_features(row, features_not_included))
-                
-            elif newcity == city:
-                if ( int(row[1]) in range_years ):
-                    example = exclude_features(row, features_not_included)
-                    data.append(example)
-
-
-    finally:
-        f.close()
-        
-        df = pd.DataFrame.from_records(data, columns = heads)
-        df = df.replace('', np.nan, regex=True)
-        
-        
+    df.replace('', np.nan, inplace=True, regex=True)
+  
+    if filter_parameters != None:
+        for key, value in filter_parameters.iteritems():
+            df_aux = df.loc[df[key].isin(value)]
+            df=df_aux
+    
+    if excludes_features != None:
+        if type(excludes_features)==list and type(excludes_features[0])== str:
+            df.drop(labels = excludes_features, axis = 1, inplace = True)
+        elif type(excludes_features)==list and type(excludes_features[0])== int:
+            df.drop(df.columns[excludes_features], axis = 1, inplace = True)
+            
+    if outliers != None:
+        df.drop(df.index[outliers], inplace = True)
+    
     return df
 
+def correlation_plots(data, R):
+    features_length = len(data.columns)
+    
+    
+    plt.pcolormesh(R)
+    pcolor(R)
+    colorbar()
+    yticks(arange(0,features_length),range(0,features_length))
+    xticks(arange(0,features_length),range(0,features_length))
+    plt.title('Pearson correlation')
+    show()
+
+    # http://stanford.edu/~mwaskom/software/seaborn/examples/many_pairwise_correlations.html
+    # Generate a mask for the upper triangle
+    sns.set(style = 'white')
+    mask = np.zeros_like(R, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+    
+    # Set up the matplotlib figure
+    f, ax = plt.subplots(figsize=(11, 9))
+
+    # Generate a custom diverging colormap
+    cmap = sns.diverging_palette(200, 10, as_cmap=True)
+
+    # Draw the heatmap with the mask and correct aspect ratio
+    sns.heatmap(R, mask=mask, cmap=cmap, vmax=.8, 
+                square=True, xticklabels=1, yticklabels=1,
+                linewidths=.2, cbar_kws={"shrink": .2}, ax=ax)
+    
+    ax.set_title('Pearson correlation')
 
 def normalization_with_minmax(data):
     
@@ -62,17 +78,33 @@ def pca(data):
     
     return estimator, X_pca_
 
+def pca_plots(estimator, X_pca, index):
+
+    fig, ax = plt.subplots(1, 1, figsize = (7, 14))
+
+    
+    for i in range(len(index)):
+        plt.text(X_pca[i][0], X_pca[i][1],
+                 index[i]) 
+
+    plt.title('PCA.\nEstimation ratio: {}'
+              .format(estimator.explained_variance_ratio_))
+    plt.xlim(min(X_pca[:,0]-0.2), max(X_pca[:,0])+0.2)
+    plt.ylim(min(X_pca[:,1]-0.2), max(X_pca[:,1])+0.2)
+    plt.grid(True)
+    fig.tight_layout()
+
+    plt.show()
 
 def main():
     # 0. Load data
     years = range(2004, 2011)
+    _filter = {'city':['sj'], 'year': years}
     excludes = range(0, 4)
-    data = load_data(
-            "../data/dengue_features_train.csv",
-            'sj',
-            years,
-            excludes)
     
+    data = load_data("../data/dengue_features_train.csv",
+                     filter_parameters = _filter, excludes_features = excludes)
+        
     # 1. Data normalization
     data_normalizated = normalization_with_minmax(data)
 
@@ -149,13 +181,16 @@ def main():
 
     fig, ax = plt.subplots()
     for i in range(len(X_pca)):
-        plt.text(X_pca[i][0], X_pca[i][1], names[i]) 
+        plt.text(X_pca[i][0], X_pca[i][1], i + 1) 
 
     plt.xlim(min(X_pca[:,0]-0.2), max(X_pca[:,0])+0.2)
     plt.ylim(min(X_pca[:,1]-0.2), max(X_pca[:,1])+0.2)
     ax.grid(True)
     fig.tight_layout()
     plt.show()
+    
+    for i in range(len(names)):
+        print "%d - %s" % (i,names[i])
 
     # 2. Compute the similarity matrix
     dist = sklearn.neighbors.DistanceMetric.get_metric('euclidean')
