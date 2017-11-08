@@ -10,8 +10,7 @@ Modified on Wed Sep 30 15:42:06 2017 by:
     GREGORIO BALDOMERO PATINO ESTEO.
     SERGIO FERNANDEZ GARCIA.
 """
-#import codecs
-import csv
+
 from numpy import arange
 from pylab import pcolor, show, colorbar, xticks, yticks
 import matplotlib.pyplot as plt
@@ -21,56 +20,27 @@ import seaborn as sns
 from sklearn.decomposition import PCA
 from sklearn import preprocessing 
 
-
-def exclude_features(data, excludes_list):
-    index_range = range(0, len(excludes_list))
-    excludes_list.sort()    
-    data_aux = data
+def load_data(file, filter_parameters = None, excludes_features = None,
+              outliers = None):
     
-    for i in index_range:
-        data_aux.pop(excludes_list[i]-i)
-        
-    return data_aux
-
-def load_data(file, city, range_years, features_not_included):
-    f = open(file, 'rt')
-    data = []
-    heads = []
+    df = pd.read_csv(file)
     
-    #total_in = 0
-    #total_out = 0
+    df.replace('', np.nan, inplace=True, regex=True)
+  
+    if filter_parameters != None:
+        for key, value in filter_parameters.iteritems():
+            df_aux = df.loc[df[key].isin(value)]
+            df=df_aux
     
-    try:
-        reader = csv.reader(f)
-        
-        for row in reader:
-            newcity = row[0]
-            if newcity == 'city':
-                heads.append(exclude_features(row, features_not_included))
-                
-            elif newcity == city:
-                if ( int(row[1]) in range_years ):
-                    
-                    #if not ('' in row):
-                        # No include 'city' column (feature) and 
-                        # rows whit any empty feature
-                    example = exclude_features(row, features_not_included)
-                    data.append(example)
-                    #total_in += 1
-                    #else:
-                        #example = 
-                        #total_out += 1
-
-    finally:
-        f.close()
-        
-        df = pd.DataFrame.from_records(data, columns = heads)
-        df = df.replace('', np.nan, regex=True)
-        
-        #print(total_in)
-        #print(total_out)
-        #print(total_in + total_out)
-        
+    if excludes_features != None:
+        if type(excludes_features)==list and type(excludes_features[0])== str:
+            df.drop(labels = excludes_features, axis = 1, inplace = True)
+        elif type(excludes_features)==list and type(excludes_features[0])== int:
+            df.drop(df.columns[excludes_features], axis = 1, inplace = True)
+            
+    if outliers != None:
+        df.drop(df.index[outliers], inplace = True)
+    
     return df
 
 
@@ -157,16 +127,14 @@ def pca(data):
     
     return estimator, X_pca_
 
-def pca_plots(estimator, X_pca):
-    
-    numbers = np.arange(len(X_pca))
+def pca_plots(estimator, X_pca, index):
 
     fig, ax = plt.subplots(1, 1, figsize = (7, 14))
 
     
     for i in range(len(X_pca)):
         plt.text(X_pca[i][0], X_pca[i][1],
-                 numbers[i] + 2) 
+                 index[i]) 
 
     plt.title('PCA.\nEstimation ratio: {}'
               .format(estimator.explained_variance_ratio_))
@@ -181,19 +149,19 @@ def pca_plots(estimator, X_pca):
 def main():
     
     years = range(2004, 2011)
+    _filter = {'city':['sj'], 'year': years}
     excludes = range(0, 4)
-    data = load_data(
-            "../data/dengue_features_train.csv",
-            'sj',
-            years,
-            excludes)
+    
+    data = load_data("../data/dengue_features_train.csv",
+                     filter_parameters = _filter, excludes_features = excludes)
+    
     R = data.astype(float).corr()
     correlation_plots(data, R)
 
     data_normalizated = normalization_with_minmax(data)
     estimator, X_pca = pca(data_normalizated)
-    
-    pca_plots(estimator, X_pca)
+    data_aux = data.dropna()
+    pca_plots(estimator, X_pca, data_aux.index.values)
     
      
 if __name__ == '__main__':
