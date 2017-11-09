@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
-import csv
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -12,45 +9,27 @@ from sklearn.cluster import KMeans
 from sklearn import metrics
 
 
-
-
-## Function for load data except Outliers
-def exclude_features(data, excludes_list):
-    index_range = range(0, len(excludes_list))
-    excludes_list.sort()    
-    data_aux = data
+def load_data(file, filter_parameters = None, excludes_features = None,
+              outliers = None):
     
-    for i in index_range:
-        data_aux.pop(excludes_list[i]-i)
-        
-    return data_aux
-
-def load_data(file, city, range_years, features_not_included):
-    f = open(file, 'rt')
-    data = []
-    heads = []
+    df = pd.read_csv(file)
     
-    try:
-        reader = csv.reader(f)
-        
-        for row in reader:
-            newcity = row[0]
-            if newcity == 'city':
-                heads.append(exclude_features(row, features_not_included))
-                
-            elif newcity == city:
-                if ( int(row[1]) in range_years ):
-                    example = exclude_features(row, features_not_included)
-                    data.append(example)
-
-
-    finally:
-        f.close()
-        
-        df = pd.DataFrame.from_records(data, columns = heads)
-        df = df.replace('', np.nan, regex=True)
-        
-        
+    df.replace('', np.nan, inplace=True, regex=True)
+  
+    if filter_parameters != None:
+        for key, value in filter_parameters.iteritems():
+            df_aux = df.loc[df[key].isin(value)]
+            df=df_aux
+    
+    if excludes_features != None:
+        if type(excludes_features)==list and type(excludes_features[0])== str:
+            df.drop(labels = excludes_features, axis = 1, inplace = True)
+        elif type(excludes_features)==list and type(excludes_features[0])== int:
+            df.drop(df.columns[excludes_features], axis = 1, inplace = True)
+            
+    if outliers != None:
+        df.drop(outliers, axis = 0, inplace = True)
+    
     return df
 
 
@@ -59,6 +38,7 @@ def normalization_with_minmax(data):
     min_max_scaler = preprocessing.MinMaxScaler()
         
     return min_max_scaler.fit_transform(data.dropna().values)    
+
 
 def pca(data):
     estimator = PCA (n_components = 2)
@@ -70,14 +50,14 @@ def pca(data):
 def main():
     # 0. Load data
     years = range(2004, 2011)
+    _filter = {'city':['sj'], 'year': years}
     excludes = range(0, 4)
+    _outliers = [732,769]
     data = load_data(
             "../data/dengue_features_train.csv",
-            'sj',
-            years,
-            excludes)
-    #  --> Excluded Outliers
-    data.drop(data.index[[21,58]], inplace = True)   
+            filter_parameters = _filter, excludes_features = excludes,
+              outliers = _outliers)
+    
     
     
     # 1. Data normalization

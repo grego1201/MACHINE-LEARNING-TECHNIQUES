@@ -10,6 +10,7 @@ from scipy import cluster
 from numpy import arange
 from pylab import pcolor, show, colorbar, xticks, yticks
 import seaborn as sns
+from tabulate import tabulate
 
 
 def load_data(file, filter_parameters = None, excludes_features = None,
@@ -180,8 +181,8 @@ def main():
     print("Variance Ratio: ", estimator.explained_variance_ratio_) 
 
     fig, ax = plt.subplots()
-    for i in range(len(X_pca)):
-        plt.text(X_pca[i][0], X_pca[i][1], i + 1) 
+    for i in range(len(names)):
+        plt.text(X_pca[i][0], X_pca[i][1], i+1) 
 
     plt.xlim(min(X_pca[:,0]-0.2), max(X_pca[:,0])+0.2)
     plt.ylim(min(X_pca[:,1]-0.2), max(X_pca[:,1])+0.2)
@@ -189,9 +190,10 @@ def main():
     fig.tight_layout()
     plt.show()
     
-    for i in range(len(names)):
-        print "%d - %s" % (i,names[i])
-
+    features_name = zip(range(1,len(names)+1),names)
+    print tabulate(features_name, headers = ['# ','Feature name'])
+    
+    
     # 2. Compute the similarity matrix
     dist = sklearn.neighbors.DistanceMetric.get_metric('euclidean')
     matsim = dist.pairwise(features_norm)
