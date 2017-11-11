@@ -6,17 +6,17 @@ It has been done in the same way as the previous tasks, with the same data set a
 This time, the values of 'total_cases' feature has been included in the target data, features belonging to the file 'dengue_labels_train.csv'.
 The values of 'total_cases' were matched considering 'city', 'year' and 'weekofyear' features.
 
-## Graphic representations.
+## Graphical representations.
 
 To facilitate the interpretation of the data present on the target data, after filtering them, show the histograms, density and scatter_matrix plots with the differences between features.
 
-![Histogram][1]  
+<center>![Histogram][1]  
 
-![Density][2]  
+![Density][2]</center>
 
 These representations facilitate, in a way, the understanding of the features ratio.
 
-![Scater Matrix][3]  
+<center>![Scater Matrix][3]</center>
 
 ## Correlation.
 
@@ -24,7 +24,7 @@ After normalization of the data using MinMax, the correlation of each of the fea
 
 ![Correlation][4]  
 
-|  |  |
+<center>
 | -- | -- |
 | __Feature__ | __R value__ |
 | -- | -- |
@@ -48,8 +48,9 @@ After normalization of the data using MinMax, the correlation of each of the fea
 | station_max_temp_c | 0.505806 |
 | station_min_temp_c | 0.386755 |
 | station_precip_mm | 0.692587 |
+</center>
 
-The features have been selected, in absolute value, greater than 0.71, which usually means a high or strong degree of correlation. Marked in __bold__ on the table.
+The features, was marked in __bold__ on the table, have been selected, greater than 0.71 (in absolute value), which usually means a high or strong degree of correlation. 
 
 
 ## CROSS VALIDATION.
@@ -59,15 +60,15 @@ Different regression trees have been generated according to the maximum depth of
 We selected the lowest value of Cross Validation, increasing the depth of the decision tree could be overfitting, we must keep in mind that the correlations of the features are above 0.71, otherwise we should take higher values or perform tests with several values to see which one fits best.
 
 ![CV Score][5]
+
 Best MAX_DEPTH: 2
 
 
-
-## CONSTRUCCIÓN DEL MODELO.
+## BUILD THE MODEL.
 
 When creating the regression model, the MSE (Mean Squared Error) criterion is by default, the maximum depth is declared at 2, the other parameters are by default.
 
-|  |  |
+
 | -- | -- |
 | Level depth | Mean | Standard Deviation |
 | -- | -- |
