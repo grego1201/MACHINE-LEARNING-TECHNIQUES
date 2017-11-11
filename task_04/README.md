@@ -67,9 +67,9 @@ Best MAX_DEPTH: 2
 
 When creating the regression model, the MSE (Mean Squared Error) criterion is by default, the maximum depth is declared at 2, the other parameters are by default.
 
-|  |  |
-| -- | -- |
-| Level depth | Mean | Standard Deviation |
+|  |  |  |
+| -- | -- | -- |
+| __Level depth__ | __Mean__ | __Standard Deviation__ |
 |  2 | 19.0044 |  +/- 14.3986135116 |
 |  3 | 19.4933 |  +/- 14.847248468 |
 |  4 | 20.5168 |  +/- 16.0544748648 |
@@ -103,10 +103,11 @@ Best MAX_DEPTH: 2
 
 To find out which features are referenced we observe relevance level of the same:
 
-                [ RELEVANCES FEATURES ]
+__[ RELEVANCE FEATURES ]__
+
 |  |  |
 | -- | -- |
-| Feature selected | Relevance |
+| __Feature selected__ | __Relevance__ |
 | ndvi_nw | 0 |
 | __reanalysis_precip_amt_kg_per_m2__ | __0.151773__ |
 | __reanalysis_specific_humidity_g_per_kg__ | __0.848227__ |
