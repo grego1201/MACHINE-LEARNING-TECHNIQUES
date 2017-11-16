@@ -1,0 +1,17 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+edge [fontname=helvetica] ;
+0 [label=<reanalysis_specific_humidity_g_per_kg &le; 17.834<br/>mse = 860.635<br/>samples = 175<br/>value = 22.56>, fillcolor="#e581391c"] ;
+1 [label=<reanalysis_specific_humidity_g_per_kg &le; 17.293<br/>mse = 85.518<br/>samples = 116<br/>value = 11.707>, fillcolor="#e5813905"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label=<mse = 38.158<br/>samples = 94<br/>value = 9.415>, fillcolor="#e5813900"] ;
+1 -> 2 ;
+3 [label=<mse = 169.523<br/>samples = 22<br/>value = 21.5>, fillcolor="#e5813919"] ;
+1 -> 3 ;
+4 [label=<reanalysis_precip_amt_kg_per_m2 &le; 4.1<br/>mse = 1697.685<br/>samples = 59<br/>value = 43.898>, fillcolor="#e5813948"] ;
+0 -> 4 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+5 [label=<mse = 0.0<br/>samples = 1<br/>value = 131.0>, fillcolor="#e58139ff"] ;
+4 -> 5 ;
+6 [label=<mse = 1593.894<br/>samples = 58<br/>value = 42.397>, fillcolor="#e5813945"] ;
+4 -> 6 ;
+}
