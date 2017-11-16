@@ -13,7 +13,7 @@ from tabulate import tabulate
 from sklearn.cross_validation import cross_val_score
 from sklearn.tree import DecisionTreeRegressor
 
-def pearson_correlation(data):
+def pearson_correlation(data, verbose = False):
    #----------------
     norm_data = norm.normalization_with_minmax(data)
     
@@ -26,40 +26,35 @@ def pearson_correlation(data):
     corr_SanJuan = map(lambda x1: pearsonr(x1,norm_data.tolist()[-1])[0],
                [norm_data[x].tolist() for x in range(len(features))])
     
-    y_pos = np.arange(len(features))
-    
-    plt.bar(y_pos, corr_SanJuan, align='center')
-    plt.xticks(y_pos, features, rotation = 90)
-    plt.ylabel('Correlation')
-    plt.title('Correlation features vs target')
-    plt.show()
-
     features_corr = zip(features, corr_SanJuan)
-    print ''
-    print tabulate(features_corr, headers = ['Feature','R value'])
+    
+    if verbose:
+        y_pos = np.arange(len(features))
+        
+        plt.bar(y_pos, corr_SanJuan, align='center')
+        plt.xticks(y_pos, features, rotation = 90)
+        plt.ylabel('Correlation')
+        plt.title('Correlation features vs target')
+        plt.show()
+    
+        print ''
+        print tabulate(features_corr, headers = ['Feature','R value'])
 
     #Selection of characteristics with correlation greater than 0.7.
     features_selected = [features_corr[i][0] for i in range(len(features_corr))
                             if abs(features_corr[i][1]) > 0.7]
     
     if len(features_selected) == 0:
-        """
-        for i in range(0,4):    
-            _index = corr_SanJuan.index(max(corr_SanJuan))
-            features_selected.append(features[_index])
-            features.pop(_index)
-            corr_SanJuan.pop(_index)
-        """
         features_selected = [features_corr[i][0] for i in range(len(features_corr))
                             if abs(features_corr[i][1]) >= 0.41]
     
-    print features_selected
+    
     return features_selected
 
 
-def cross_validation(data):
+def cross_validation(data, verbose = False):
     
-    features_selected = pearson_correlation(data)
+    features_selected = pearson_correlation(data, verbose)
     
     total_scores = []
 
@@ -71,17 +66,19 @@ def cross_validation(data):
         total_scores.append((scores.mean(), scores.std()))
     
     scores_mean = [total_scores[i][0] for i in range(len(total_scores))]
-    
-    plt.plot(range(2,30), scores_mean, marker='o')
-    plt.xlabel('max_depth')
-    plt.ylabel('cv score')
-    plt.show()
-    
     info_regression = [(i+2, total_scores[i][0], '+/- '+str(total_scores[i][1])) for i in range(len(total_scores))]
-    print ''
-    print tabulate(info_regression, headers = ['Level depth', 'Mean','Standard Deviation'])
     best_max_depth = total_scores.index(min(total_scores))+2
-    print '\nBest MAX_DEPTH: %d' % (best_max_depth)
+    
+    if verbose:
+        plt.plot(range(2,30), scores_mean, marker='o')
+        plt.xlabel('max_depth')
+        plt.ylabel('cv score')
+        plt.show()
+        
+        print ''
+        print tabulate(info_regression, headers = ['Level depth', 'Mean','Standard Deviation'])
+    
+        print '\nBest MAX_DEPTH: %d' % (best_max_depth)
     
     return features_selected, best_max_depth
     

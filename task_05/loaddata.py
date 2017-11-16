@@ -35,7 +35,6 @@ def load_data(_file, filter_parameters = None, excludes_features = None,
 
 def get_values_of(_file, feature):
     df = load_data(_file)
-    a = list(set(df[feature]))
 
-    return a
+    return list(set(df[feature]))
     
