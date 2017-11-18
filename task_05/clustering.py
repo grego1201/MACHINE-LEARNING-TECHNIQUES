@@ -18,12 +18,13 @@ import pandas as pd
 """
 
 """
-def hierarchical_clustering(data, verbose = False):
+def hierarchical_clustering(data, cut = None, first_total = None, verbose = False):
     
     #Normalization Data
     no_nan_data = data.dropna(how = 'any')
     norm_data = norm.normalization_with_minmax(data)
-    #norm_dataIquitos = normalization_with_minmax(dataIquitos)
+    
+    
     
     estimator, X_pca = norm.pca(norm_data)
     #norm.pca_plots(estimator, X_pca, no_nan_data.index.values)
@@ -42,21 +43,38 @@ def hierarchical_clustering(data, verbose = False):
     criterions = ["inconsistent", "distance", "maxclust"]
     sel_crit = criterions[1]
 
-    cut = 3.7 # ad-hoc
+    #cut = 3.7 # ad-hoc
     
     clusters = cluster.hierarchy.linkage(matsim, method = selec_meth)
     # http://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.cluster.hierarchy.dendrogram.html
-    if verbose:
-        plt.figure(figsize = (10,10));
-        cluster.hierarchy.dendrogram(clusters, color_threshold = 7)
-        plt.title('%s color_threshold: %d' % (selec_meth, 7))
-        plt.show()
+    #if verbose:
+    plt.figure(figsize = (10,10));
+    dendrogram_data=cluster.hierarchy.dendrogram(clusters, color_threshold = 7)
     
-    labels = cluster.hierarchy.fcluster(clusters, cut , criterion = sel_crit)
+    flatten = lambda l: [item for sublist in l for item in sublist]
+    dendrogram_flat = flatten(dendrogram_data.get('dcoord'))
+    
+    if not cut:
+        cut = max(dendrogram_flat)
+        dendrogram_flat.remove(cut)
+        max_distance = cut - 0.1
+        
+    else:
+        max_distance = max(dendrogram_flat)-0.1
+    
+   
+    
+    plt.title('%s color_threshold: %d' % (selec_meth, 7))
+    plt.show()
+    
+    labels = cluster.hierarchy.fcluster(clusters, max_distance , criterion = sel_crit)
     
     #   4. plot
     numbers = no_nan_data.index.values
     n_total = len(numbers)
+    
+    if not first_total:
+        first_total = n_total
     
     if verbose:
         colors = np.array([x for x in 'bgrcmykbgrcmykbgrcmykbgrcmyk'])
@@ -70,7 +88,7 @@ def hierarchical_clustering(data, verbose = False):
         plt.ylim(min(X_pca[:,1]-0.2), max(X_pca[:,1])+0.2)
         ax.grid(True)
         fig.tight_layout()
-        plt.title('Method: %s, Cut: %d, Criterion: %s' % (selec_meth, cut, sel_crit))
+        plt.title('Method: %s, Cut: %5.2f, Criterion: %s' % (selec_meth, max_distance, sel_crit))
         plt.show()
     
     # 5. characterization
@@ -78,9 +96,12 @@ def hierarchical_clustering(data, verbose = False):
     if verbose:
         print('Estimated number of clusters: %d' % n_clusters_)
     
-    
+    #print 'cut: %.2f' % cut
     groups = {}
     outliers = []
+    cut_percent = cut *(1 - avSim +0.2)
+    max_cut = cut - cut_percent
+    
     for c in range(1, n_clusters_+1):
         
         elements = []
@@ -92,29 +113,43 @@ def hierarchical_clustering(data, verbose = False):
         groups[c] = elements
         
         n_elements = len(elements)
-        percent = (float(n_elements)/float(n_total))*100.0
+        percent = (float(n_elements+(first_total-n_total))/float(n_total))*100.0
         
-        if (percent<=2.0):
+        if (percent <= 2.0 and max_cut <= max_distance):
             outliers.append(elements)
-        elif (percent <= 10.0):
+            del groups[c]
+            
+            if verbose:
+                print 'Para eliminar 2%: \t'
+                print elements
+        
+        elif (percent <= 10.0 and max_cut <= max_distance):
             
             df = pd.DataFrame(data, index = elements)
             
-            sub_elements, sub_outliers = hierarchical_clustering(df)
-            if sub_outliers != None:
-                outliers.append(sub_outliers)
-            elements = sub_elements
-            n_elements = len(elements)
-        
-        if verbose:
-            print '\nGroup %2d, length: %d, total %d, percent %5.2f ' % (c, n_elements, n_total, percent)
-        
-        
-    if (len(outliers) == 0):
-        outliers = None
-    
-    return groups, outliers
+            sub_elements, sub_outliers, cut = hierarchical_clustering(df, 
+                                                        cut = cut,
+                                                        first_total = first_total,
+                                                        verbose = False)
 
+            if verbose and sub_outliers:
+                print 'Para eliminar 10%: \t'
+                print sub_outliers
+            
+            if sub_outliers:
+                outliers.append(sub_outliers)
+            else:
+                outliers = None
+                    
+    flatten = lambda l: [item for sublist in l for item in sublist]
+    
+    if outliers:
+        final_outliers = flatten(outliers)
+    else:
+        final_outliers = None
+        
+    return groups, final_outliers, cut
+    
 """
 
 """
@@ -260,7 +295,7 @@ def kMeans_clustering(data, verbose = False):
         
         if verbose:
             print '\nGroup %2d, length: %d, total %d, percent %5.2f ' % (c, n_elements, n_total, percent)
-        
+    
     if (len(outliers) == 0):
         outliers = None
     

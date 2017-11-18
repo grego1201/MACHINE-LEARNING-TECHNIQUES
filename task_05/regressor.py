@@ -26,13 +26,13 @@ def tree_regressor(data, max_depth, features_selected, feature_regression, city,
     #3.3.  Model Visualization
     
     dot_data = export_graphviz(regressor, out_file=None, 
-                               feature_names = features_selected,
-                               filled=True, rounded=True,  
+                               feature_names = features_selected, 
+                               filled=True, rounded=True, 
                                special_characters=True)  
     
-    #graph = graphviz.Source(dot_data, format = 'png')   
-    #graph.render('decision_tree_mse_'+city, 'images', cleanup= True) 
-    #graph 
+    graph = graphviz.Source(dot_data, format = 'png')   
+    graph.render('decision_tree_mse_'+city, 'images', cleanup= True) 
+    graph 
     
 
     # 3.4 Feature Relevances

@@ -2,3 +2,5 @@
 data/
 
 \.spyproject/
+
+*.pyc

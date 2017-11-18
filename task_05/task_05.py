@@ -11,6 +11,18 @@ import regressor as reg
 import clustering
 import pandas as pd
 
+
+def count_elements(elements):
+    total = 0
+    if type(elements)==list:
+        total=len(elements)
+        
+    elif type(elements)==dict:
+        for key, value in elements.iteritems():
+            total += len(value)
+    
+    return total
+
 def main():
     
     years = None
@@ -36,32 +48,47 @@ def main():
         
         
         # Adapt data for clustering
-        data_for_cluster = data.drop(labels = ['city', 'year'], axis = 1, inplace = False)        
-        data_test_hiech = data_for_cluster
+        data_test_hiech = data.drop(labels = ['city', 'year'], axis = 1, inplace = False)        
         
         # Outliers will be deleted
-        elements, outliers = clustering.hierarchical_clustering(data_test_hiech)
-        print '\nOutliers in: ' + city   
-        while (outliers != None):
-            print 'Auto-detected Outliers: \n\t' + str(outliers)
-            outliers_list = outliers[0]
-            for i in range(1, len(outliers)):
-                outliers_list += outliers[i]
-            
-            data_test_hiech.drop(outliers_list, axis = 0, inplace = True)
-            elements, outliers = clustering.hierarchical_clustering(data_test_hiech)
+        elements, outliers, cut = clustering.hierarchical_clustering(data = data_test_hiech,
+                                                            verbose = True)
+        n_element= count_elements(elements)
+        n_outliers = count_elements(outliers)        
+        total=n_element + n_outliers
         
+        print '\nOutliers in: %s \n\t' % (city)
+        
+
+
+        total_outliers = []
+        while (outliers != None):  
+            total_outliers += outliers
+            data_test_hiech.drop(outliers, axis = 0, inplace = True)
+            elements, outliers, cut = clustering.hierarchical_clustering(data_test_hiech,
+                                                                cut = cut,
+                                                                first_total = total, 
+                                                                verbose = True)
+        
+        if total_outliers:
+            print 'Auto-detected Outliers:'
+            print total_outliers
         
         # Join data
-        merge_data = pd.merge(data, data_labels, on = ['city', 'year', 'weekofyear'], how = 'outer')
+        data_without_outliers = data
+        data_without_outliers.drop(total_outliers, axis = 0, inplace = True)
+        
+        merge_data = pd.merge(data_without_outliers, data_labels, on = ['city', 'year', 'weekofyear'], how = 'outer')
         merge_data.drop(labels = ['city', 'year'], axis = 1, inplace = True)
-        merge_data.dropna(inplace=True)
+        merge_data.dropna(inplace = True)
+        
+        clustering.hierarchical_clustering_features(merge_data, verbose = True)
         
         # Croos Validation for select features
-        feature_selected, max_deph = cros.cross_validation(merge_data, verbose = False)
+        feature_selected, max_deph = cros.cross_validation(merge_data, verbose = True)
         
         # Regressor for select relevant features
-        relevant_features = reg.tree_regressor(merge_data, max_deph, feature_selected, 'total_cases', city, False)
+        relevant_features = reg.tree_regressor(merge_data, max_deph, feature_selected, 'total_cases', city, verbose = True)
         
         all_revelant_features[city] = relevant_features
     
