@@ -87,7 +87,7 @@ This is not important in this step but thanks to the elimination of outliers we 
 [8]: https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_05/images/cross_validation/max_depth_sanjuan.png
 [9]: https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_05/images/cross_validation/correlation_iquitos.png
 [10]: https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_05/images/cross_validation/max_depth_iquitos.png
-[11]: https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_05/images/decision_tree_mse_iq.png
+[11]: https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_05/images/decision_tree_mse_sj.png
 [12]: https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_05/images/decision_tree_mse_iq.png
 [13]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_05/images/features_cluster/features_cluster_sanjuan.png
 [14]: https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_05/images/features_cluster/features_cluster_iquitos.png
