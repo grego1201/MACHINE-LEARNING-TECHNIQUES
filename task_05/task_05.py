@@ -51,14 +51,14 @@ def main():
         data_test_hiech = data.drop(labels = ['city', 'year'], axis = 1, inplace = False)        
         
         # Outliers will be deleted
-        elements, outliers, cut = clustering.hierarchical_clustering(data = data_test_hiech,
-                                                            verbose = True)
+        elements, outliers, cut = clustering.hierarchical_clustering(data = data_test_hiech)
+    
         n_element= count_elements(elements)
         n_outliers = count_elements(outliers)        
         total=n_element + n_outliers
         
         print '\nOutliers in: %s \n\t' % (city)
-        
+       
 
 
         total_outliers = []
@@ -67,8 +67,7 @@ def main():
             data_test_hiech.drop(outliers, axis = 0, inplace = True)
             elements, outliers, cut = clustering.hierarchical_clustering(data_test_hiech,
                                                                 cut = cut,
-                                                                first_total = total, 
-                                                                verbose = True)
+                                                                first_total = total)
         
         if total_outliers:
             print 'Auto-detected Outliers:'
@@ -82,19 +81,22 @@ def main():
         merge_data.drop(labels = ['city', 'year'], axis = 1, inplace = True)
         merge_data.dropna(inplace = True)
         
-        clustering.hierarchical_clustering_features(merge_data, verbose = True)
+        # Features clustering
+        data_for_features = merge_data.drop(labels = ['total_cases'], axis = 1)
+        clustering.hierarchical_clustering_features(data_for_features)
         
         # Croos Validation for select features
-        feature_selected, max_deph = cros.cross_validation(merge_data, verbose = True)
+        feature_selected, max_deph = cros.cross_validation(merge_data)
         
         # Regressor for select relevant features
-        relevant_features = reg.tree_regressor(merge_data, max_deph, feature_selected, 'total_cases', city, verbose = True)
+        relevant_features = reg.tree_regressor(merge_data, max_deph, feature_selected, 'total_cases', city)
         
         all_revelant_features[city] = relevant_features
     
     print '\n\t [ SELECTED FEATURES ]'
     for key, value in all_revelant_features.iteritems():
         print 'City: %s, %2d features: \n\t %s' % (key, len(value), str(value))
+        
     
 if __name__ == '__main__':
 	main()

@@ -24,16 +24,17 @@ def hierarchical_clustering(data, cut = None, first_total = None, verbose = Fals
     no_nan_data = data.dropna(how = 'any')
     norm_data = norm.normalization_with_minmax(data)
     
-    
-    
     estimator, X_pca = norm.pca(norm_data)
-    #norm.pca_plots(estimator, X_pca, no_nan_data.index.values)
+    
+    if verbose:
+        norm.pca_plots(estimator, X_pca, no_nan_data.index.values)
     
     # 1. Hierarchical Clustering
     #   1.1. Compute the similarity matrix
     dist = sklearn.neighbors.DistanceMetric.get_metric('euclidean')
     matsim = dist.pairwise(X_pca)
     avSim = np.average(matsim)
+    
     if verbose:
         print "%s\t%6.2f" % ('Average Distance', avSim)
 
@@ -47,9 +48,10 @@ def hierarchical_clustering(data, cut = None, first_total = None, verbose = Fals
     
     clusters = cluster.hierarchy.linkage(matsim, method = selec_meth)
     # http://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.cluster.hierarchy.dendrogram.html
-    #if verbose:
-    plt.figure(figsize = (10,10));
-    dendrogram_data=cluster.hierarchy.dendrogram(clusters, color_threshold = 7)
+    if verbose:
+        plt.figure(figsize = (10,10));
+    
+    dendrogram_data=cluster.hierarchy.dendrogram(clusters,no_plot= (not verbose), color_threshold = 7)
     
     flatten = lambda l: [item for sublist in l for item in sublist]
     dendrogram_flat = flatten(dendrogram_data.get('dcoord'))
@@ -63,9 +65,9 @@ def hierarchical_clustering(data, cut = None, first_total = None, verbose = Fals
         max_distance = max(dendrogram_flat)-0.1
     
    
-    
-    plt.title('%s color_threshold: %d' % (selec_meth, 7))
-    plt.show()
+    if verbose:
+        plt.title('%s color_threshold: %d' % (selec_meth, 7))
+        plt.show()
     
     labels = cluster.hierarchy.fcluster(clusters, max_distance , criterion = sel_crit)
     
@@ -194,7 +196,7 @@ def hierarchical_clustering_features(data, verbose = False):
     avSim = np.average(matsim)
     if verbose:
         print "%s\t%6.2f" % ('Average Distance', avSim)
-    
+        plt.figure(figsize = (7,7));
     
     # 3. Building the Dendrogram	
     # http://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.linkage.html#scipy.cluster.hierarchy.linkage

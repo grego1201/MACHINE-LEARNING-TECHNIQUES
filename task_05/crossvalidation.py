@@ -14,7 +14,9 @@ from sklearn.cross_validation import cross_val_score
 from sklearn.tree import DecisionTreeRegressor
 
 def pearson_correlation(data, verbose = False):
-   #----------------
+   
+    plt.rcdefaults()
+    #----------------
     norm_data = norm.normalization_with_minmax(data)
     
     # 2. Principal Component Analysis
@@ -53,6 +55,7 @@ def pearson_correlation(data, verbose = False):
 
 
 def cross_validation(data, verbose = False):
+    plt.rcdefaults()
     
     features_selected = pearson_correlation(data, verbose)
     
