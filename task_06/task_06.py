@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 import codecs
+from loaddata_entrenamiento import load_data_entrenamiento
 
 def count_elements(elements):
     total = 0
@@ -102,7 +103,7 @@ def main():
         target = ['total_cases']
         n_neighbors, X, y = cros.cross_validation(merge_data, algorithm ='KNN', 
                               features = relevant_features, 
-                              target = target, verbose = True)
+                              target = target, verbose = False)
         
         #---------------------------------------------
 
@@ -123,12 +124,18 @@ def main():
         plt.plot(xx, prediccion, c='g', label='prediction')
         plt.axis('tight')
         plt.legend()
-        plt.title("KNeighborsRegressor (k = %i, weights = '%s')" % (n_neighbors,weights))
+        plt.title("KNeighborsRegressor (k = %i, weights = '%s')" % (n_neighbors,'distance'))
         
         plt.show()
         
         # write the results in a csv file
-            
+        data_rellenar, names = load_data_entrenamiento("../data/submission_format.csv")
+        for i in range(len(data_rellenar)):
+            data_rellenar[i][3]=int(prediccion[i][0])
+        
+        col =["city","year","weekofyear","total_cases"]
+        df = pd.DataFrame(data_rellenar, columns = col)
+        df.to_csv("../data/datos_entrenamiento.csv", index=False, sep=',', encoding='utf-8')    
     
 
         #---------------------------------------------
