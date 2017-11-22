@@ -170,14 +170,16 @@ def cross_validation(data, algorithm=None, features = None, target = None, verbo
         
         n_neighbors = best_neighbors[0] # BEST PARAMETER
         
+        plt.figure(figsize = (10,10));
+        
         for i, weights in enumerate(['uniform', 'distance']):
             knn = neighbors.KNeighborsRegressor(n_neighbors, weights=weights)
             y_pred = knn.fit(X,y).predict(X)
-        
+            
             plt.subplot(2, 1, i + 1)
             plt.plot(xx, y, c='k', label='data')
             plt.plot(xx, y_pred, c='g', label='prediction')
-            plt.axis('tight')
+            #plt.axis('tight')
             plt.legend()
             plt.title("KNeighborsRegressor (k = %i, weights = '%s')" % (n_neighbors,
                                                                         weights))
