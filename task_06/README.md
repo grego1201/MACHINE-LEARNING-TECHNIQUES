@@ -45,6 +45,9 @@ After all, we will charge the test file 'dengue_features_test' and we will obtai
 * __Iquitos:__
 ![Iquitos_cv][9] ![Iquitos_training][10]
 
+### Score.
+
+![Score][11]
 
 
 
@@ -58,3 +61,4 @@ After all, we will charge the test file 'dengue_features_test' and we will obtai
 [8]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/SanJuan_training.png
 [9]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Iquitos_cv.png
 [10]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Iquitos_training.png
+[11]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/scores.png
