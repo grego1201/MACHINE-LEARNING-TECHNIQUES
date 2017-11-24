@@ -30,20 +30,24 @@ When we have obtain the neighbour number we are going to buil de KNN model using
 
 * __San Juan:__
 
-![sj_distancia][3] ![sj_uniforme][4]
+![sj_training][3] 
 
 * __Iquitos:__
 
-![iquitos_distancia][5] ![iquitos_uniforme][6]
+![iquitos_training][4]
+
 
 ### Prediction
 After all, we will charge the test file 'dengue_features_test' and we will obtain the prediction for this data with the neighbours and the distance parameter in order to predict the total cases.
 
 * __San Juan:__
-![SanJuan_cv][7] ![SanJuan_training][8]
+
+![SanJuan_prediction][5]
 
 * __Iquitos:__
-![Iquitos_cv][9] ![Iquitos_training][10]
+
+![Iquitos_prediction][6]
+
 
 ### Score.
 
@@ -51,14 +55,10 @@ After all, we will charge the test file 'dengue_features_test' and we will obtai
 
 
 
-[1]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Cross-validation/sj_cross.png
-[2]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Cross-validation/iquitos_cross.png
-[3]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Build-model/sj_distancia.png
-[4]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Build-model/sj_uniform.png
-[5]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Build-model/iquitos_distancia.png
-[6]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Build-model/iquitos_uniform.png
-[7]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/SanJuan_cv.png
-[8]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/SanJuan_training.png
-[9]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Iquitos_cv.png
-[10]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Iquitos_training.png
-[11]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/scores.png
+[1]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/SanJuan_cv.png
+[2]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Iquitos_cv.png
+[3]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/SanJuan_training.png
+[4]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Iquitos_training.png
+[5]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/SanJuan_prediction.png
+[6]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/Iquitos_prediction.png
+[7]:https://github.com/grego1201/MACHINE-LEARNING-TECHNIQUES/blob/master/task_06/images/scores.png
