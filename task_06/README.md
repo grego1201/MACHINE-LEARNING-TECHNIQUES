@@ -51,7 +51,7 @@ After all, we will charge the test file 'dengue_features_test' and we will obtai
 
 ### Score.
 
-![Score][11]
+![Score][7]
 
 
 
