@@ -33,4 +33,4 @@ Task goal, obtain predictions using the file 'dengue_features_train' and 'dengue
 
 ### TASK_7
 
-Final resilts.
+Final results.
